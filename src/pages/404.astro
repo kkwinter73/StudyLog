@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "../site";
 ---
 
 <BaseLayout title="404">
@@ -9,6 +10,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </p>
     <h1>404</h1>
     <p>そのページは見つかりませんでした。</p>
-    <p><a href="/">← logs に戻る</a></p>
+    <p><a href={withBase("/")}>← logs に戻る</a></p>
   </div>
 </BaseLayout>

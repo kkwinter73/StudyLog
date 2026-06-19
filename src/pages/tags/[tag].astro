@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
+import { withBase } from "../../site";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths = (async () => {
@@ -23,7 +24,7 @@ const { tag, posts } = Astro.props;
 ---
 
 <BaseLayout title={`#${tag}`} wide>
-  <a class="back-link" href="/tags/">← all tags</a>
+  <a class="back-link" href={withBase("/tags/")}>← all tags</a>
   <p class="section-label">#{tag} <span style="color:var(--text-faint)">({posts.length})</span></p>
   <ul class="post-list">
     {posts.map((post) => <PostCard post={post} />)}

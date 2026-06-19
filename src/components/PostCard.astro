@@ -1,5 +1,5 @@
 ---
-import { LEVELS, formatDate, readingTime } from "../site";
+import { LEVELS, formatDate, readingTime, withBase } from "../site";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -19,14 +19,14 @@ const mins = readingTime(post.body);
     <span class="badge">{lv.emoji} {lv.label}</span>
   </div>
   <h2 class="card-title">
-    <a class="stretched" href={`/posts/${post.id}/`}>{title}</a>
+    <a class="stretched" href={withBase(`/posts/${post.id}/`)}>{title}</a>
   </h2>
   <p class="card-summary">{summary}</p>
   {
     tags.length > 0 && (
       <div class="card-tags">
         {tags.map((t) => (
-          <a class="tag" href={`/tags/${encodeURIComponent(t)}/`}>
+          <a class="tag" href={withBase(`/tags/${encodeURIComponent(t)}/`)}>
             {t}
           </a>
         ))}

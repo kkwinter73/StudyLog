@@ -1,10 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { SITE } from "../site";
+import { SITE, withBase } from "../site";
 ---
 
 <BaseLayout title="About">
-  <a class="back-link" href="/">← logs に戻る</a>
+  <a class="back-link" href={withBase("/")}>← logs に戻る</a>
   <div class="prose" style="margin-top:24px">
     <h1>About</h1>
     <p>

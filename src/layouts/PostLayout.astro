@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import { LEVELS, formatDate, readingTime } from "../site";
+import { LEVELS, formatDate, readingTime, withBase } from "../site";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -13,7 +13,7 @@ const mins = readingTime(post.body);
 ---
 
 <BaseLayout title={title} description={summary}>
-  <a class="back-link" href="/">← logs に戻る</a>
+  <a class="back-link" href={withBase("/")}>← logs に戻る</a>
 
   <article>
     <header class="article-header">
@@ -29,7 +29,7 @@ const mins = readingTime(post.body);
         tags.length > 0 && (
           <div class="card-tags" style="margin-top:14px">
             {tags.map((t) => (
-              <a class="tag" href={`/tags/${encodeURIComponent(t)}/`}>
+              <a class="tag" href={withBase(`/tags/${encodeURIComponent(t)}/`)}>
                 {t}
               </a>
             ))}
@@ -44,7 +44,7 @@ const mins = readingTime(post.body);
   </article>
 
   <div class="post-nav">
-    <a class="back-link" href="/">← logs 一覧</a>
-    <a class="back-link" href="/tags/">tags →</a>
+    <a class="back-link" href={withBase("/")}>← logs 一覧</a>
+    <a class="back-link" href={withBase("/tags/")}>tags →</a>
   </div>
 </BaseLayout>

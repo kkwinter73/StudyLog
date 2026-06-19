@@ -1,11 +1,11 @@
 ---
-import { SITE } from "../site";
-const path = Astro.url.pathname;
+import { SITE, withBase } from "../site";
+const path = Astro.url.pathname.replace(/\/$/, "");
 ---
 
 <header class="site-header">
   <div class="container container-wide bar">
-    <a class="brand" href="/" aria-label={SITE.title}>
+    <a class="brand" href={withBase("/")} aria-label={SITE.title}>
       <span class="prompt">{SITE.prompt}</span>
       <span class="dot">$</span>
       <span>{SITE.title}</span>
@@ -15,8 +15,8 @@ const path = Astro.url.pathname;
       {
         SITE.nav.map((item) => (
           <a
-            href={item.href}
-            aria-current={path === item.href ? "page" : undefined}
+            href={withBase(item.href)}
+            aria-current={path === withBase(item.href).replace(/\/$/, "") ? "page" : undefined}
           >
             {item.label}
           </a>

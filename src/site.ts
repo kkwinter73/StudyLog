@@ -29,6 +29,14 @@ export function readingTime(body: string | undefined): number {
   return Math.max(1, minutes);
 }
 
+// 内部リンクに base パス（GitHub Pages の /StudyLog 等）を前置する。
+// 例: withBase("/posts/foo/") → "/StudyLog/posts/foo/"
+export function withBase(path: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, ""); // "/StudyLog"
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${p}`;
+}
+
 export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
