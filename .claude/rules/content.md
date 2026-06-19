@@ -1,0 +1,42 @@
+# 記事コンテンツの規約（content/posts）
+
+このファイルは「記事をどう書くか」の唯一の真実源（SoT）。frontmatter のスキーマ定義は
+`src/content.config.ts`、ここはその運用ルールと文体ガイド。`lint-post` hook と `new-log`
+スキルはここを参照する。
+
+## 置き場所とファイル名
+
+- 記事は `src/content/posts/<slug>.md` に置く（1記事=1ファイル）。
+- `<slug>` は英小文字・ハイフン区切り。URL は `/posts/<slug>/` になる。
+  - 例: `goroutine-channel-basics.md` → `/posts/goroutine-channel-basics/`
+- 日付はファイル名に入れない（frontmatter の `date` が真実源。並び順もこれを使う）。
+
+## frontmatter（必須・任意）
+
+```yaml
+---
+title: "goroutine と channel ではじめる並行処理"   # 必須
+date: 2026-06-18                                   # 必須 (YYYY-MM-DD)
+summary: "一覧カードと OG に出る一言要約。"          # 必須 (1〜2文)
+tags: ["並行処理", "基礎"]                          # 任意 (既存タグを優先して再利用)
+level: beginner                                    # 任意 beginner|intermediate|advanced
+draft: false                                       # 任意 true で一覧・ビルドから除外
+---
+```
+
+- `level` の既定は `beginner`。学習当時の体感難易度で付ける（🌱/⚙️/🚀 がカードに出る）。
+- `tags` は **新語を増やす前に既存タグを確認**して揃える（`/tags/` で一覧できる）。表記ゆれを作らない。
+
+## 文体・体裁ガイド
+
+- **冒頭1〜2文で「何の話か」を要約**してから本論に入る。
+- 見出しは `##`（大）/`###`（小）。`#` は使わない（title が H1）。
+- コードブロックは必ず言語指定（```go / ```bash など）。Shiki が色付けする。
+- **要点ブロック**は引用 `>` を使う。絵文字を1つ添えると効く（例: `> ⚠️`, `> 🧭`, `> 💡`）。
+- 比較・対応関係は表にする。
+- 記事末に「まとめ」（箇条書き3〜5個）と、可能なら「次にやること」を置く。
+
+## やらないこと
+
+- `dist/` `.astro/`（生成物）は触らない（`guard-generated` hook が止める）。
+- 恒久的に残したい設計判断は記事ではなく `docs/decisions/` に薄く記録する（[decisions](../../docs/README.md)）。
