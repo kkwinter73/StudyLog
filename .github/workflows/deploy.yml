@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  # main への push で自動デプロイ
+  push:
+    branches: [main]
+  # 手動実行も可能に
+  workflow_dispatch:
+
+# GITHUB_TOKEN に Pages デプロイ権限を付与
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時実行は1つに（古いデプロイはキャンセル）
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # withastro/action が npm ci → astro build → artifact アップロードまで実施
+      - name: Build with Astro
+        uses: withastro/action@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
