@@ -15,8 +15,15 @@ Go（Golang）の勉強ログを、技術ブログ寄りで遊び心もある **
 
 ## このプロジェクトでやること
 
-- Notion にためた Go 学習メモを、**都度 Markdown で受け取り** → `new-log` スキルで整形 → 記事化。
-- 詳しい記事化手順は `.claude/skills/new-log/SKILL.md`、書き方ルールは `.claude/rules/content.md`。
+Go の学習を、一貫した粒度・体裁の記事にして公開する。**記事化の依頼が来たら必ず
+`new-log` スキル（`.claude/skills/new-log/SKILL.md`）に従う**。合図は2系統あり、どちらも同じ手順:
+
+- **「〜についてまとめて」**（題材だけ指定）→ ゼロから入門記事を書く（広い題材は焦点を絞る）
+- **Notion の Markdown/テキストを渡される** → 今の粒度に圧縮して記事化
+
+粒度は既存記事 `src/content/posts/*.md` が見本。**1記事1トピック**、濃い／複数トピックなら分割。
+書き方ルールの真実源は `.claude/rules/content.md`。公開は push → GitHub Actions が自動デプロイ
+（手順は new-log スキルの「公開フロー」）。
 
 ## タスク種別 → 参照する場所
 
