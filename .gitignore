@@ -1,0 +1,20 @@
+# build & deps
+node_modules/
+dist/
+.astro/
+
+# astro / vite cache
+.vercel/
+.netlify/
+
+# os / editor
+.DS_Store
+*.log
+npm-debug.log*
+
+# 個人override（コミットしない）
+.claude/settings.local.json
+
+# serena
+.serena/cache/
+node_modules

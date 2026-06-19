@@ -1,0 +1,22 @@
+{
+  "name": "studylog",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Go の勉強ログ — 技術ブログでありつつ、ちょっと遊び心もある学習記録",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "decisions": "node scripts/gen-decisions-index.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.7.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.8.0"
+  }
+}
