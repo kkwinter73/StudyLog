@@ -11,13 +11,14 @@ Go（Golang）を学んだことを書きためる勉強ログ。技術ブログ
 
 ```bash
 npm install        # 初回のみ
-npm run dev        # http://localhost:4321 でプレビュー（ホットリロード）
+npm run dev        # http://localhost:4321/StudyLog/ でプレビュー（ホットリロード）
 npm run build      # 本番ビルド → dist/
 npm run preview    # ビルド結果をローカル確認
 npm run check      # 型 + content schema の検証
 ```
 
 必要環境: Node.js 18+（開発は Node 26 で確認）。
+base パス（`/StudyLog`）を設定しているため、ローカルでも URL は `/StudyLog/` 始まりになる。
 
 ## 記事を書く
 
@@ -54,6 +55,19 @@ docs/              知識の置き場所（SoT 表・意思決定ログ・ハー
 .claude/           開発ハーネス（hooks / rules / skills / settings）
 scripts/           decisions 索引の生成
 ```
+
+## デプロイ（GitHub Pages）
+
+`main` に push すると GitHub Actions（`.github/workflows/deploy.yml`）が自動でビルド・公開する。
+
+- 公開URL: **https://kkwinter73.github.io/StudyLog/**
+- 初回のみ GitHub の **Settings → Pages → Build and deployment → Source** を
+  **「GitHub Actions」** にする（CLI から有効化済みなら設定不要）。
+- 公開URLが変わる場合（独自ドメイン等）は `astro.config.mjs` の `site` / `base` を更新する。
+  独自ドメインをルートで使うなら `base` を `"/"` に戻す。
+
+内部リンクは `base` を意識しなくてよい。コンポーネントは `withBase()`（`src/site.ts`）、
+Markdown 本文の `/posts/...` は rehype プラグインが自動で base を前置する。
 
 ## 開発環境について
 

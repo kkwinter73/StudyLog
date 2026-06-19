@@ -32,7 +32,7 @@ Go（Golang）の勉強ログを、技術ブログ寄りで遊び心もある **
 ## 開発コマンド
 
 ```bash
-npm run dev        # ローカルプレビュー http://localhost:4321
+npm run dev        # ローカルプレビュー http://localhost:4321/StudyLog/ (base付き)
 npm run build      # 本番ビルド（dist/）
 npm run check      # 型 + content schema 検証（コミット前に）
 npm run decisions  # docs/decisions-index.md を再生成（決定を足したら実行）
