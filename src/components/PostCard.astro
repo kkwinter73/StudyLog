@@ -1,0 +1,36 @@
+---
+import { LEVELS, formatDate, readingTime } from "../site";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"posts">;
+}
+const { post } = Astro.props;
+const { title, summary, date, tags, level } = post.data;
+const lv = LEVELS[level];
+const mins = readingTime(post.body);
+---
+
+<li class="card">
+  <div class="card-meta">
+    <span>{formatDate(date)}</span>
+    <span>·</span>
+    <span>{mins} min read</span>
+    <span class="badge">{lv.emoji} {lv.label}</span>
+  </div>
+  <h2 class="card-title">
+    <a class="stretched" href={`/posts/${post.id}/`}>{title}</a>
+  </h2>
+  <p class="card-summary">{summary}</p>
+  {
+    tags.length > 0 && (
+      <div class="card-tags">
+        {tags.map((t) => (
+          <a class="tag" href={`/tags/${encodeURIComponent(t)}/`}>
+            {t}
+          </a>
+        ))}
+      </div>
+    )
+  }
+</li>

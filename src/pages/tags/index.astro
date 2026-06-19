@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = await getCollection("posts", ({ data }) => !data.draft);
+const counts = new Map<string, number>();
+for (const p of posts) {
+  for (const t of p.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+}
+const tags = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="Tags">
+  <p class="section-label">tags</p>
+  {
+    tags.length === 0 ? (
+      <p class="empty">タグはまだありません。</p>
+    ) : (
+      <div class="card-tags" style="gap:10px">
+        {tags.map(([tag, n]) => (
+          <a class="tag" href={`/tags/${encodeURIComponent(tag)}/`} style="font-size:0.85rem;padding:6px 14px">
+            {tag} <span style="opacity:.6;margin-left:4px">{n}</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</BaseLayout>

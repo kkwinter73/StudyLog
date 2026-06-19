@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../site";
+---
+
+<BaseLayout title="About">
+  <a class="back-link" href="/">← logs に戻る</a>
+  <div class="prose" style="margin-top:24px">
+    <h1>About</h1>
+    <p>
+      {SITE.author} が <strong>Go（Golang）</strong> を学んだことを書きためる勉強ログです。
+      Notion にためた学習メモを、技術ブログとして読みやすく・ちょっと楽しく整理しています。
+    </p>
+    <h2>このサイトについて</h2>
+    <ul>
+      <li>記事は Markdown で管理（<code>src/content/posts/</code>）</li>
+      <li>静的サイトジェネレータ <a href="https://astro.build">Astro</a> でビルド</li>
+      <li>アクセントカラーは Go ブランドの cyan <code>#00ADD8</code></li>
+    </ul>
+    <h2>難易度バッジ</h2>
+    <p>各ログには学習当時の体感難易度をつけています。</p>
+    <ul>
+      <li>🌱 beginner — 入門・基礎</li>
+      <li>⚙️ intermediate — 実務でよく使う</li>
+      <li>🚀 advanced — 踏み込んだ話題</li>
+    </ul>
+  </div>
+</BaseLayout>

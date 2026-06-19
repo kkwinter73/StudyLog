@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+import { SITE } from "../site";
+
+const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const total = posts.length;
+---
+
+<BaseLayout wide>
+  <section class="hero">
+    <div class="terminal">
+      <div class="tbar">
+        <span class="led r"></span><span class="led y"></span><span class="led g"></span>
+        <span class="title">{SITE.prompt} — zsh</span>
+      </div>
+      <div class="tbody">
+        <p class="line"><span class="accent">$</span> go doc studylog</p>
+        <h1>{SITE.title} <span style="color:var(--accent)">·</span> {SITE.tagline}</h1>
+        <p class="lead">{SITE.description}</p>
+        <p class="line" style="margin-top:14px">
+          <span class="accent">$</span> ls logs/ | wc -l → {total}<span class="cursor"></span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <p class="section-label">logs</p>
+
+  {
+    total === 0 ? (
+      <p class="empty">まだログがありません。`/new-log` で最初の記事を追加しよう。</p>
+    ) : (
+      <ul class="post-list">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

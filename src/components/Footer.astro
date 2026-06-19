@@ -1,0 +1,13 @@
+---
+import { SITE } from "../site";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container container-wide bar">
+    <span>{SITE.prompt}/$ echo "thanks for reading"</span>
+    <span style="margin-left:auto">
+      © {year} {SITE.author} · built with <a href="https://astro.build">Astro</a>
+    </span>
+  </div>
+</footer>
