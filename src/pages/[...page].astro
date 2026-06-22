@@ -1,0 +1,81 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+import { SITE, PAGE_SIZE } from "../site";
+import type { GetStaticPaths } from "astro";
+
+// ページ送り: 1ページ目は "/"、以降は "/2/" "/3/" ...（base は自動付与される）
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+  );
+  return paginate(posts, { pageSize: PAGE_SIZE });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const isFirst = page.currentPage === 1;
+---
+
+<BaseLayout
+  wide
+  title={isFirst ? undefined : `logs (${page.currentPage}/${page.lastPage})`}
+>
+  {
+    isFirst && (
+      <section class="hero">
+        <div class="terminal">
+          <div class="tbar">
+            <span class="led r" /><span class="led y" /><span class="led g" />
+            <span class="title">{SITE.prompt} — zsh</span>
+          </div>
+          <div class="tbody">
+            <p class="line"><span class="accent">$</span> go doc studylog</p>
+            <h1>
+              {SITE.title} <span style="color:var(--accent)">·</span> {SITE.tagline}
+            </h1>
+            <p class="lead">{SITE.description}</p>
+            <p class="line" style="margin-top:14px">
+              <span class="accent">$</span> ls logs/ | wc -l → {page.total}
+              <span class="cursor" />
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <p class="section-label">
+    logs <span style="color:var(--text-faint)">({page.total})</span>
+  </p>
+
+  {
+    page.total === 0 ? (
+      <p class="empty">まだログがありません。`/new-log` で最初の記事を追加しよう。</p>
+    ) : (
+      <ul class="post-list">
+        {page.data.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    page.lastPage > 1 && (
+      <nav class="pagination" aria-label="ページ送り">
+        {page.url.prev ? (
+          <a href={page.url.prev}>← 新しい</a>
+        ) : (
+          <span class="disabled">← 新しい</span>
+        )}
+        <span class="pageno">{page.currentPage} / {page.lastPage}</span>
+        {page.url.next ? (
+          <a href={page.url.next}>古い →</a>
+        ) : (
+          <span class="disabled">古い →</span>
+        )}
+      </nav>
+    )
+  }
+</BaseLayout>

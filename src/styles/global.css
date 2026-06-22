@@ -552,6 +552,41 @@ main {
   padding: 40px 0;
 }
 
+/* ---- pagination ---- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 34px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+.pagination a {
+  color: var(--text-soft);
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elev);
+}
+.pagination a:hover {
+  text-decoration: none;
+  color: var(--accent-deep);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.pagination .disabled {
+  color: var(--text-faint);
+  opacity: 0.4;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+}
+.pagination .pageno {
+  color: var(--text-faint);
+}
+
 @media (max-width: 640px) {
   .nav a { padding: 6px 8px; }
   .hero .tbody { padding: 18px 16px 20px; }

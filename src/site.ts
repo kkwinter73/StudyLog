@@ -15,6 +15,9 @@ export const SITE = {
   ],
 } as const;
 
+// トップの logs 一覧で1ページに表示する件数。ここを変えるだけでページ送りの粒度が変わる。
+export const PAGE_SIZE = 8;
+
 export const LEVELS = {
   beginner: { label: "beginner", emoji: "🌱" },
   intermediate: { label: "intermediate", emoji: "⚙️" },
