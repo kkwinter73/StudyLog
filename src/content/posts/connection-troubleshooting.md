@@ -6,7 +6,7 @@ tags: ["ネットワーク", "基礎", "運用"]
 level: beginner
 ---
 
-> 📚 シリーズ「ネットワークをちゃんと使う」(4 / 4)
+> 📚 シリーズ「ネットワークをちゃんと使う」(4 / 5)
 
 シリーズの総まとめ。「繋がらない」と言っても原因は様々。鍵になるのが **refused と timed out の違い**。
 ここまでの IP・ポート・[TCP](/posts/ports-and-tcp/)・[DNS](/posts/dns-basics-and-tools/) を総動員して、切り分けの順序を立てる。
@@ -61,7 +61,7 @@ level: beginner
 - timed out の最頻原因は **ファイアウォール/SG の遮断**。許可ルールを CIDR＋ポートで確認
 - 本番だけ繋がらないなら、まず **SG のインバウンドルール**を見る
 
-**← 前:** [③ DNSの仕組みと調べ方](/posts/dns-basics-and-tools/)
+ここまでが「繋がるか」の話。繋がった後にサーバーが返す応答の読み方は、次の HTTPステータスコード編へ。
 
-これで「ネットワークをちゃんと使う」シリーズは完結。[AWSのネットワーク編](/posts/aws-networking-explained/)が、
-IP・ポート・DNS・SG の地に足のついた理解の上で読めるようになるはず。
+**← 前:** [③ DNSの仕組みと調べ方](/posts/dns-basics-and-tools/)
+**→ 次:** [⑤ HTTPステータスコードの読み方](/posts/http-status-codes/)
