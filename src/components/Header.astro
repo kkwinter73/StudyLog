@@ -1,6 +1,7 @@
 ---
 import { SITE, withBase } from "../site";
 const path = Astro.url.pathname.replace(/\/$/, "");
+const indexUrl = withBase("/search.json");
 ---
 
 <header class="site-header">
@@ -23,6 +24,18 @@ const path = Astro.url.pathname.replace(/\/$/, "");
         ))
       }
     </nav>
+
+    <div class="site-search">
+      <input
+        id="site-search-input"
+        type="search"
+        placeholder="grep…"
+        autocomplete="off"
+        aria-label="記事を検索"
+        data-index={indexUrl}
+      />
+      <div id="site-search-results" class="search-dropdown" role="listbox" hidden></div>
+    </div>
 
     <button
       class="theme-toggle"
@@ -48,6 +61,81 @@ const path = Astro.url.pathname.replace(/\/$/, "");
       const next = current === "dark" ? "light" : "dark";
       root.dataset.theme = next;
       localStorage.setItem("theme", next);
+    });
+  })();
+</script>
+
+<script is:inline>
+  (() => {
+    const input = document.getElementById("site-search-input");
+    const panel = document.getElementById("site-search-results");
+    if (!input || !panel) return;
+    const indexUrl = input.dataset.index;
+    let posts = null;
+    let loading = false;
+
+    const esc = (s) =>
+      String(s).replace(/[&<>"']/g, (c) =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+      );
+
+    function load() {
+      if (posts || loading) return;
+      loading = true;
+      fetch(indexUrl)
+        .then((r) => r.json())
+        .then((d) => {
+          posts = d;
+          if (input.value) render(input.value);
+        })
+        .catch(() => {
+          loading = false;
+        });
+    }
+
+    function render(q) {
+      const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!posts || terms.length === 0) {
+        panel.hidden = true;
+        panel.innerHTML = "";
+        return;
+      }
+      const hits = posts
+        .filter((p) => {
+          const hay = (
+            p.title + " " + p.summary + " " + p.tags.join(" ") + " " + p.body
+          ).toLowerCase();
+          return terms.every((t) => hay.includes(t));
+        })
+        .slice(0, 8);
+
+      if (hits.length === 0) {
+        panel.innerHTML = '<p class="sd-empty">ヒットなし</p>';
+      } else {
+        panel.innerHTML = hits
+          .map(
+            (p) =>
+              `<a class="sd-item" href="${esc(p.url)}">` +
+              `<span class="sd-title">${esc(p.title)}</span>` +
+              `<span class="sd-meta">${esc(p.emoji)} ${esc(p.tags.join(" / "))}</span>` +
+              `</a>`,
+          )
+          .join("");
+      }
+      panel.hidden = false;
+    }
+
+    input.addEventListener("focus", load);
+    input.addEventListener("input", () => render(input.value));
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        input.value = "";
+        panel.hidden = true;
+        input.blur();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".site-search")) panel.hidden = true;
     });
   })();
 </script>
