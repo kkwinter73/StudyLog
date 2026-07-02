@@ -81,4 +81,4 @@ e1 = (m2 / m1) * 100     ← エラー率(%)。これをウィジェットに描
 - 並びは**上=症状(RED)→下=原因(リソース)**。読み下すだけで状況が分かる
 - **CloudWatch ダッシュボード ≒ Grafana**。ただしデータ源と可視化が一体
 
-**前:** [CloudWatchでメトリクスを集める](/posts/cloudwatch-metrics/)　**次:** CloudWatch Logsでログを集める（Step 6）
+**前:** [CloudWatchでメトリクスを集める](/posts/cloudwatch-metrics/)　**次:** [CloudWatch Logsでログを集める](/posts/cloudwatch-logs/)（Step 6）
