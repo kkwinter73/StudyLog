@@ -79,4 +79,4 @@ pull/push は優劣でなく**向き不向き**。居場所の分かる常駐サ
 - pull は居場所の分かる常駐向き、push は短命・分散・マネージド向き。優劣でなく特性
 - カウンタ×rate が前編の Rate につながる——型が分かると RED が計算できる
 
-**前:** [何を測るか（4大シグナルとRED）](/posts/what-to-measure-metrics/)　**次:** 監視の4役を自作する（Step 3・Prometheus+Grafana）
+**前:** [何を測るか（4大シグナルとRED）](/posts/what-to-measure-metrics/)　**次:** [監視の4役を自作する](/posts/build-monitoring-oss/)（Step 3・Prometheus+Grafana）

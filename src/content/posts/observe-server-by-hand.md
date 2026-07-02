@@ -99,4 +99,4 @@ journalctl -u nginx | grep error   # サービス単位＋語で絞る
 - 「重い」と言われたらまず **top（CPU/load）・free（メモリ）・df（ディスク）** の3つ
 - ログは `journalctl -f` / `tail -f` ＋ `grep` で追える
 
-**前:** [監視と可観測性](/posts/observability-basics/)　**次:** 何を測るか（Step 2・4大シグナルとREDメソッド）
+**前:** [監視と可観測性](/posts/observability-basics/)　**次:** [何を測るか（4大シグナルとRED）](/posts/what-to-measure-metrics/)（Step 2）
