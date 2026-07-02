@@ -74,4 +74,4 @@ EC2
 - OS内部の値は **CloudWatch Agent** で `CWAgent` 名前空間へ（カスタムメトリクス＝課金対象）
 - 対応は **Agent≒exporter+scrape / CloudWatch≒時系列DB**、ただし **push型**（Prometheusのpullと逆）
 
-**前:** [監視の4役を自作する](/posts/build-monitoring-oss/)　**次:** CloudWatchで可視化する（Step 5・ダッシュボード）
+**前:** [監視の4役を自作する](/posts/build-monitoring-oss/)　**次:** [CloudWatchで可視化する](/posts/cloudwatch-dashboards/)（Step 5・ダッシュボード）

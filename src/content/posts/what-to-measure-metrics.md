@@ -43,7 +43,7 @@ Web API のような**リクエスト駆動サービス**向けに、Golden Sign
 | **D**uration | 処理にかかった時間（＝レイテンシ） |
 
 - サービスごとに「Rate / Errors / Duration」を並べるだけで、健全性がひと目で分かる
-- これが後の CloudWatch ダッシュボード（Step 5）に並べる指標の芯になる
+- これが後の [CloudWatch ダッシュボード](/posts/cloudwatch-dashboards/)（Step 5）に並べる指標の芯になる
 
 > 💡 資源側には **USE メソッド**（Utilization / Saturation / Errors）という別の型がある。
 > ざっくり **RED＝リクエスト（サービスの外から）**、**USE＝資源（サーバの中）**、と使い分ける。
