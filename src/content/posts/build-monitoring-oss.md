@@ -97,4 +97,4 @@ rate(node_cpu_seconds_total{mode="user"}[1m])
 - カウンタは **rate** で「秒あたり」に変換して読む
 - この4役を CloudWatch がどう肩代わりするかが、次からの軸。**深入りはしない**
 
-**前:** [メトリクスの型と収集方式](/posts/metric-types-and-collection/)　**次:** CloudWatchでメトリクスを集める（Step 4）
+**前:** [メトリクスの型と収集方式](/posts/metric-types-and-collection/)　**次:** [CloudWatchでメトリクスを集める](/posts/cloudwatch-metrics/)（Step 4）
