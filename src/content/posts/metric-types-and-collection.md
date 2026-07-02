@@ -63,7 +63,7 @@ push型:  被監視側 ──「今の値これです」──▶ 監視側     
 - **pull**は「ターゲット一覧」を監視側が持ち、生きているか（取れるか）も同時に分かる
 - **push**は送る側さえ届けばよく、居場所が変わるものや一瞬で終わる処理に強い
 
-> ⚠️ この違いは後で効く。[Prometheus は pull](/posts/observability-basics/)（次のStep 3で自作）、
+> ⚠️ この違いは後で効く。[Prometheus は pull](/posts/build-monitoring-oss/)（Step 3で自作）、
 > **CloudWatch は push**（Step 4）。同じ「メトリクス収集」でも向きが逆、と頭に入れておく。
 
 ## どちらが良いというより特性
