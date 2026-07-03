@@ -89,4 +89,4 @@ This matters **if you're starting now**. The old X-Ray-specific SDK is winding d
 - On AWS, ship via **ADOT** to **X-Ray** and read the path and timing on the trace map
 - **X-Ray SDK is in maintenance mode (Feb 2026) → new work uses OTel/ADOT**. The X-Ray service itself continues
 
-**Prev:** [Collecting logs with CloudWatch Logs](/en/posts/cloudwatch-logs/)　**Next:** SLOs and alert design (Step 8, the finale)
+**Prev:** [Collecting logs with CloudWatch Logs](/en/posts/cloudwatch-logs/)　**Next:** [SLOs and error budgets](/en/posts/slo-and-error-budget/) (Step 8, the finale)

@@ -86,4 +86,4 @@ Goサービス(OTelで計装) → ADOT Collector → AWS X-Ray（ServiceLens の
 - AWSでは **ADOT** で **X-Ray** に送り、トレースマップで経路と所要時間を見る
 - **X-Ray SDK はメンテナンスモード（2026/2）→ 新規は OTel/ADOT**。X-Ray サービス自体は継続
 
-**前:** [CloudWatch Logsでログを集める](/posts/cloudwatch-logs/)　**次:** SLOとアラート設計（Step 8・最終回）
+**前:** [CloudWatch Logsでログを集める](/posts/cloudwatch-logs/)　**次:** [SLOとエラーバジェット](/posts/slo-and-error-budget/)（Step 8・最終回）
