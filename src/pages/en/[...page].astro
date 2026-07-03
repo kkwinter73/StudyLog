@@ -1,16 +1,16 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import PostCard from "../components/PostCard.astro";
-import { SITE, PAGE_SIZE } from "../site";
-import { UI, byLang, localizeHref } from "../i18n";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { SITE, PAGE_SIZE } from "../../site";
+import { UI, byLang, localizeHref } from "../../i18n";
 import type { GetStaticPaths } from "astro";
 
-const LANG = "ja";
+const LANG = "en";
 
-// ページ送り: 1ページ目は "/"、以降は "/2/" "/3/" ...（base は自動付与される）
+// ページ送り: 1ページ目は "/en/"、以降は "/en/2/" ...
 export const getStaticPaths = (async ({ paginate }) => {
-  const posts = (await getCollection("posts", byLang("ja"))).sort(
+  const posts = (await getCollection("posts", byLang("en"))).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
   );
   return paginate(posts, { pageSize: PAGE_SIZE });
@@ -24,7 +24,7 @@ const ui = UI[LANG];
 <BaseLayout
   wide
   lang={LANG}
-  altUrl={localizeHref("en", "/")}
+  altUrl={localizeHref("ja", "/")}
   title={isFirst ? undefined : `logs (${page.currentPage}/${page.lastPage})`}
 >
   {

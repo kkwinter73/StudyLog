@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE } from "../../site";
+import { UI, localizeHref } from "../../i18n";
+const LANG = "en";
+---
+
+<BaseLayout title="About" lang={LANG} altUrl={localizeHref("ja", "/about/")}>
+  <a class="back-link" href={localizeHref(LANG, "/")}>{UI[LANG].backToLogs}</a>
+  <div class="prose" style="margin-top:24px">
+    <h1>About</h1>
+    <p>
+      A study log where {SITE.author} writes up what they learn about
+      <strong>Go (Golang)</strong>, bit by bit — turning scattered notes into a
+      readable (and slightly playful) tech blog.
+    </p>
+    <h2>About this site</h2>
+    <ul>
+      <li>Posts are written in Markdown (<code>src/content/posts/</code>)</li>
+      <li>Built with the static site generator <a href="https://astro.build">Astro</a></li>
+      <li>Accent color is the Go brand cyan <code>#00ADD8</code></li>
+      <li>Japanese / English language switch (the 🌐 in the top right)</li>
+    </ul>
+    <h2>Difficulty badges</h2>
+    <p>Each log carries the difficulty it felt like at the time of learning.</p>
+    <ul>
+      <li>🌱 beginner — intro / fundamentals</li>
+      <li>⚙️ intermediate — common in real work</li>
+      <li>🚀 advanced — deeper topics</li>
+    </ul>
+    <p style="color:var(--text-faint)">
+      English articles are being added gradually — most posts are Japanese for now.
+    </p>
+  </div>
+</BaseLayout>

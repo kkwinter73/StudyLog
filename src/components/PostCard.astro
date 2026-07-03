@@ -1,32 +1,35 @@
 ---
-import { LEVELS, formatDate, readingTime, withBase } from "../site";
+import { LEVELS, readingTime } from "../site";
+import { fmtDate, localizeHref, postSlug, type Lang } from "../i18n";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
   post: CollectionEntry<"posts">;
+  lang?: Lang;
 }
-const { post } = Astro.props;
+const { post, lang = "ja" } = Astro.props;
 const { title, summary, date, tags, level } = post.data;
 const lv = LEVELS[level];
 const mins = readingTime(post.body);
+const slug = postSlug(post);
 ---
 
 <li class="card">
   <div class="card-meta">
-    <span>{formatDate(date)}</span>
+    <span>{fmtDate(date, lang)}</span>
     <span>·</span>
     <span>{mins} min read</span>
     <span class="badge">{lv.emoji} {lv.label}</span>
   </div>
   <h2 class="card-title">
-    <a class="stretched" href={withBase(`/posts/${post.id}/`)}>{title}</a>
+    <a class="stretched" href={localizeHref(lang, `/posts/${slug}/`)}>{title}</a>
   </h2>
   <p class="card-summary">{summary}</p>
   {
     tags.length > 0 && (
       <div class="card-tags">
         {tags.map((t) => (
-          <a class="tag" href={withBase(`/tags/${encodeURIComponent(t)}/`)}>
+          <a class="tag" href={localizeHref(lang, `/tags/${encodeURIComponent(t)}/`)}>
             {t}
           </a>
         ))}

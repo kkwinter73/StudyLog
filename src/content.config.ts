@@ -17,6 +17,10 @@ const posts = defineCollection({
     level: z.enum(["beginner", "intermediate", "advanced"]).default("beginner"),
     // 下書きは一覧・本番ビルドから除外
     draft: z.boolean().default(false),
+    // 記事の言語。未指定は日本語。英語版は "en" を指定し en/ 配下に置く
+    lang: z.enum(["ja", "en"]).default("ja"),
+    // ja/en の対訳を結ぶ共有キー（言語トグルの対訳先探索に使う）。未指定は slug と同じ扱い
+    translationKey: z.string().optional(),
   }),
 });
 

@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { UI, byLang, localizeHref } from "../../i18n";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { UI, byLang, localizeHref } from "../../../i18n";
 
-const LANG = "ja";
-const posts = await getCollection("posts", byLang("ja"));
+const LANG = "en";
+const posts = await getCollection("posts", byLang("en"));
 const counts = new Map<string, number>();
 for (const p of posts) {
   for (const t of p.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
@@ -13,7 +13,7 @@ const tags = [...counts.entries()].sort((a, b) => b[1] - a[1]);
 const ui = UI[LANG];
 ---
 
-<BaseLayout title="Tags" lang={LANG} altUrl={localizeHref("en", "/tags/")}>
+<BaseLayout title="Tags" lang={LANG} altUrl={localizeHref("ja", "/tags/")}>
   <p class="section-label">tags</p>
   {
     tags.length === 0 ? (

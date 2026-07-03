@@ -3,21 +3,28 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { SITE, withBase } from "../site";
+import { UI, otherLang, type Lang } from "../i18n";
 
 interface Props {
   title?: string;
   description?: string;
   /** 一覧などで横幅を広げたいとき */
   wide?: boolean;
+  /** ページの言語 */
+  lang?: Lang;
+  /** 言語トグルの遷移先（もう一方の言語での同等ページ。無ければトップ） */
+  altUrl?: string;
 }
 
-const { title, description = SITE.description, wide = false } = Astro.props;
-const pageTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — ${SITE.tagline}`;
+const { title, lang = "ja", altUrl, wide = false } = Astro.props;
+const description = Astro.props.description ?? UI[lang].description;
+const pageTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — ${UI[lang].tagline}`;
 const containerClass = wide ? "container container-wide" : "container";
+const altAbs = altUrl ? new URL(altUrl, Astro.url).href : undefined;
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,6 +35,8 @@ const containerClass = wide ? "container container-wide" : "container";
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="alternate" hreflang={lang} href={Astro.url.href} />
+    {altAbs && <link rel="alternate" hreflang={otherLang(lang)} href={altAbs} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -45,7 +54,7 @@ const containerClass = wide ? "container container-wide" : "container";
     </script>
   </head>
   <body>
-    <Header />
+    <Header lang={lang} altUrl={altUrl} />
     <main>
       <div class={containerClass}>
         <slot />

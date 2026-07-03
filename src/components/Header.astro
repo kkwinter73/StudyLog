@@ -1,23 +1,33 @@
 ---
-import { SITE, withBase } from "../site";
+import { SITE } from "../site";
+import { UI, NAV, localizeHref, otherLang, type Lang } from "../i18n";
+
+interface Props {
+  lang?: Lang;
+  altUrl?: string;
+}
+const { lang = "ja", altUrl } = Astro.props;
+const ui = UI[lang];
 const path = Astro.url.pathname.replace(/\/$/, "");
-const indexUrl = withBase("/search.json");
+const indexUrl = localizeHref(lang, "/search.json");
+const brandUrl = localizeHref(lang, "/");
+const toggleUrl = altUrl ?? localizeHref(otherLang(lang), "/");
 ---
 
 <header class="site-header">
   <div class="container container-wide bar">
-    <a class="brand" href={withBase("/")} aria-label={SITE.title}>
+    <a class="brand" href={brandUrl} aria-label={SITE.title}>
       <span class="prompt">{SITE.prompt}</span>
       <span class="dot">$</span>
       <span>{SITE.title}</span>
     </a>
 
-    <nav class="nav" aria-label="メインナビ">
+    <nav class="nav" aria-label="main navigation">
       {
-        SITE.nav.map((item) => (
+        NAV.map((item) => (
           <a
-            href={withBase(item.href)}
-            aria-current={path === withBase(item.href).replace(/\/$/, "") ? "page" : undefined}
+            href={localizeHref(lang, item.path)}
+            aria-current={path === localizeHref(lang, item.path).replace(/\/$/, "") ? "page" : undefined}
           >
             {item.label}
           </a>
@@ -29,13 +39,18 @@ const indexUrl = withBase("/search.json");
       <input
         id="site-search-input"
         type="search"
-        placeholder="grep…"
+        placeholder={ui.searchPlaceholder}
         autocomplete="off"
-        aria-label="記事を検索"
+        aria-label={ui.searchAria}
         data-index={indexUrl}
+        data-empty={ui.searchEmpty}
       />
       <div id="site-search-results" class="search-dropdown" role="listbox" hidden></div>
     </div>
+
+    <a class="lang-toggle" href={toggleUrl} title={ui.toggleTitle} aria-label={ui.toggleTitle}>
+      <span aria-hidden="true">🌐</span> {otherLang(lang).toUpperCase()}
+    </a>
 
     <button
       class="theme-toggle"
@@ -71,6 +86,7 @@ const indexUrl = withBase("/search.json");
     const panel = document.getElementById("site-search-results");
     if (!input || !panel) return;
     const indexUrl = input.dataset.index;
+    const emptyText = input.dataset.empty || "no hits";
     let posts = null;
     let loading = false;
 
@@ -110,7 +126,7 @@ const indexUrl = withBase("/search.json");
         .slice(0, 8);
 
       if (hits.length === 0) {
-        panel.innerHTML = '<p class="sd-empty">ヒットなし</p>';
+        panel.innerHTML = '<p class="sd-empty">' + esc(emptyText) + "</p>";
       } else {
         panel.innerHTML = hits
           .map(

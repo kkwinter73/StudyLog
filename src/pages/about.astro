@@ -1,10 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { SITE, withBase } from "../site";
+import { SITE } from "../site";
+import { UI, localizeHref } from "../i18n";
+const LANG = "ja";
 ---
 
-<BaseLayout title="About">
-  <a class="back-link" href={withBase("/")}>← logs に戻る</a>
+<BaseLayout title="About" lang={LANG} altUrl={localizeHref("en", "/about/")}>
+  <a class="back-link" href={localizeHref(LANG, "/")}>{UI[LANG].backToLogs}</a>
   <div class="prose" style="margin-top:24px">
     <h1>About</h1>
     <p>
@@ -16,6 +18,7 @@ import { SITE, withBase } from "../site";
       <li>記事は Markdown で管理（<code>src/content/posts/</code>）</li>
       <li>静的サイトジェネレータ <a href="https://astro.build">Astro</a> でビルド</li>
       <li>アクセントカラーは Go ブランドの cyan <code>#00ADD8</code></li>
+      <li>日本語 / English の言語切り替えに対応（右上の 🌐）</li>
     </ul>
     <h2>難易度バッジ</h2>
     <p>各ログには学習当時の体感難易度をつけています。</p>

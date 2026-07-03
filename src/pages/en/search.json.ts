@@ -1,12 +1,11 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
-import { LEVELS, readingTime } from "../site";
-import { byLang, fmtDate, localizeHref, postSlug } from "../i18n";
+import { LEVELS, readingTime } from "../../site";
+import { byLang, fmtDate, localizeHref, postSlug } from "../../i18n";
 
-// ビルド時に日本語記事（draft 除く）の検索インデックスを JSON で吐く。
-// 英語版は /en/search.json（src/pages/en/search.json.ts）が別に吐く。
+// 英語記事（draft 除く）の検索インデックス。/en/search.json に出る。
 export const GET: APIRoute = async () => {
-  const posts = (await getCollection("posts", byLang("ja"))).sort(
+  const posts = (await getCollection("posts", byLang("en"))).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
   );
 
@@ -24,9 +23,9 @@ export const GET: APIRoute = async () => {
       title,
       summary,
       tags,
-      url: localizeHref("ja", `/posts/${slug}/`),
-      tagUrls: tags.map((t) => localizeHref("ja", `/tags/${encodeURIComponent(t)}/`)),
-      date: fmtDate(date, "ja"),
+      url: localizeHref("en", `/posts/${slug}/`),
+      tagUrls: tags.map((t) => localizeHref("en", `/tags/${encodeURIComponent(t)}/`)),
+      date: fmtDate(date, "en"),
       level: LEVELS[level].label,
       emoji: LEVELS[level].emoji,
       mins: readingTime(p.body),

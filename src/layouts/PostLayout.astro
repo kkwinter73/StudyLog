@@ -1,24 +1,28 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import { LEVELS, formatDate, readingTime, withBase } from "../site";
+import { LEVELS, readingTime } from "../site";
+import { UI, fmtDate, localizeHref, type Lang } from "../i18n";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
   post: CollectionEntry<"posts">;
+  lang?: Lang;
+  altUrl?: string;
 }
-const { post } = Astro.props;
+const { post, lang = "ja", altUrl } = Astro.props;
 const { title, summary, date, tags, level } = post.data;
 const lv = LEVELS[level];
 const mins = readingTime(post.body);
+const ui = UI[lang];
 ---
 
-<BaseLayout title={title} description={summary}>
-  <a class="back-link" href={withBase("/")}>← logs に戻る</a>
+<BaseLayout title={title} description={summary} lang={lang} altUrl={altUrl}>
+  <a class="back-link" href={localizeHref(lang, "/")}>{ui.backToLogs}</a>
 
   <article>
     <header class="article-header">
       <div class="card-meta">
-        <span>{formatDate(date)}</span>
+        <span>{fmtDate(date, lang)}</span>
         <span>·</span>
         <span>{mins} min read</span>
         <span class="badge">{lv.emoji} {lv.label}</span>
@@ -29,7 +33,7 @@ const mins = readingTime(post.body);
         tags.length > 0 && (
           <div class="card-tags" style="margin-top:14px">
             {tags.map((t) => (
-              <a class="tag" href={withBase(`/tags/${encodeURIComponent(t)}/`)}>
+              <a class="tag" href={localizeHref(lang, `/tags/${encodeURIComponent(t)}/`)}>
                 {t}
               </a>
             ))}
@@ -44,7 +48,7 @@ const mins = readingTime(post.body);
   </article>
 
   <div class="post-nav">
-    <a class="back-link" href={withBase("/")}>← logs 一覧</a>
-    <a class="back-link" href={withBase("/tags/")}>tags →</a>
+    <a class="back-link" href={localizeHref(lang, "/")}>{ui.logsNav}</a>
+    <a class="back-link" href={localizeHref(lang, "/tags/")}>{ui.tagsNav}</a>
   </div>
 </BaseLayout>

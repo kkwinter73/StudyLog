@@ -1,20 +1,31 @@
 ---
 import { getCollection, render } from "astro:content";
 import PostLayout from "../../layouts/PostLayout.astro";
+import { byLang, localizeHref, postSlug } from "../../i18n";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths = (async () => {
-  const posts = await getCollection("posts", ({ data }) => !data.draft);
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  const posts = await getCollection("posts", byLang("ja"));
+  // 対訳（英語版）がある slug の集合。トグルの遷移先判定に使う
+  const enKeys = new Set((await getCollection("posts", byLang("en"))).map(postSlug));
+  return posts.map((post) => {
+    const slug = postSlug(post);
+    return {
+      params: { slug },
+      props: {
+        post,
+        altUrl: enKeys.has(slug)
+          ? localizeHref("en", `/posts/${slug}/`)
+          : localizeHref("en", "/"),
+      },
+    };
+  });
 }) satisfies GetStaticPaths;
 
-const { post } = Astro.props;
+const { post, altUrl } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<PostLayout post={post}>
+<PostLayout post={post} lang="ja" altUrl={altUrl}>
   <Content />
 </PostLayout>

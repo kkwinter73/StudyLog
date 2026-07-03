@@ -35,6 +35,12 @@ function rehypeBaseLinks() {
 export default defineConfig({
   site: "https://kkwinter73.github.io",
   base: BASE,
+  // 日本語は既定（ルート直下・URL不変）、英語は /en/ 配下。ページは手動で用意する。
+  i18n: {
+    locales: ["ja", "en"],
+    defaultLocale: "ja",
+    routing: { prefixDefaultLocale: false },
+  },
   markdown: {
     rehypePlugins: [rehypeBaseLinks()],
     // 明/暗どちらでも崩れないよう dual theme。CSS 側で出し分ける（global.css 参照）
