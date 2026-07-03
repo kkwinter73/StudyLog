@@ -86,4 +86,4 @@ fields @timestamp, level, requestId, message
 - **Logs Insights** は `fields | filter | stats` のパイプライン。**filter は早めに**
 - 使い分けは**メトリクスで気づく→ログで何が**。時間帯で往復して原因に迫る
 
-**前:** [CloudWatchで可視化する](/posts/cloudwatch-dashboards/)　**次:** 分散トレーシング（Step 7・X-Ray / OpenTelemetry）
+**前:** [CloudWatchで可視化する](/posts/cloudwatch-dashboards/)　**次:** [分散トレーシング](/posts/distributed-tracing-otel/)（Step 7・X-Ray / OpenTelemetry）

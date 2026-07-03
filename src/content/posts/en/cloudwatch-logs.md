@@ -83,4 +83,4 @@ Combined with the [dashboards from last time](/en/posts/cloudwatch-dashboards/),
 - **Logs Insights** is a `fields | filter | stats` pipeline. **Put filter early**
 - The division of labor: **notice via metrics → what happened via logs**. Go back and forth by time window to zero in on the cause
 
-**Prev:** [Visualizing with CloudWatch](/en/posts/cloudwatch-dashboards/)　**Next:** Distributed tracing (Step 7 · X-Ray / OpenTelemetry)
+**Prev:** [Visualizing with CloudWatch](/en/posts/cloudwatch-dashboards/)　**Next:** [Distributed tracing](/en/posts/distributed-tracing-otel/) (Step 7 · X-Ray / OpenTelemetry)
