@@ -688,3 +688,119 @@ main {
   .nav a { padding: 6px 8px; }
   .hero .tbody { padding: 18px 16px 20px; }
 }
+
+/* ── 学習マップ（/map） ───────────────────────────────────────────── */
+.roadmap {
+  margin-top: 28px;
+}
+.tier {
+  margin-bottom: 8px;
+}
+.tier-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+}
+.tier-num {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+}
+.tier-head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.tier-arrow {
+  text-align: center;
+  font-size: 1.6rem;
+  color: var(--accent);
+  margin: 10px 0 18px;
+  line-height: 1;
+}
+.dom-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  scroll-margin-top: 90px;
+}
+.dom-card:target {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.dom-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dom-icon {
+  font-size: 1.25rem;
+}
+.dom-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.dom-blurb {
+  margin: 8px 0 10px;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.dom-deps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+.deps-label {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+.dep-chip {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.dep-chip:hover {
+  border-color: var(--accent);
+}
+.dom-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dom-list li {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.dom-list a {
+  text-decoration: none;
+  color: var(--text);
+}
+.dom-list a:hover {
+  color: var(--accent-deep);
+  text-decoration: underline;
+}

@@ -1,0 +1,74 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { UI, localizeHref, postLang, postSlug } from "../i18n";
+import { TIERS, DOMAINS } from "../roadmap";
+
+const LANG = "ja";
+
+// slug → タイトル（現在の言語の記事から引く）
+const posts = await getCollection("posts");
+const titleOf = new Map<string, string>();
+for (const p of posts) {
+  if (postLang(p) === LANG) titleOf.set(postSlug(p), p.data.title);
+}
+const domainById = new Map(DOMAINS.map((d) => [d.id, d]));
+---
+
+<BaseLayout title="Map" lang={LANG} altUrl={localizeHref("en", "/map/")}>
+  <a class="back-link" href={localizeHref(LANG, "/")}>{UI[LANG].backToLogs}</a>
+
+  <div class="prose" style="margin-top:24px">
+    <h1>学習マップ</h1>
+    <p>
+      これまでのログは点の集まりではなく、<strong>下の段が上の段を支える一枚の地図</strong>として
+      つながっています。上から順に読むと、<strong>OS とネットワークの土台</strong>の上に
+      アプリを<strong>作り</strong>、本番に<strong>載せ</strong>、<strong>守る</strong>——という
+      流れでメンタルモデルが積み上がります。各ドメインの見出し下の「前提」は、先に読むと理解が早い土台です。
+    </p>
+  </div>
+
+  <div class="roadmap">
+    {
+      TIERS.map((tier) => (
+        <section class="tier">
+          <div class="tier-head">
+            <span class="tier-num">{tier.n}</span>
+            <h2>{LANG === "ja" ? tier.ja : tier.en}</h2>
+          </div>
+          <div class="tier-grid">
+            {DOMAINS.filter((d) => d.tier === tier.n).map((d) => (
+              <div class="dom-card" id={`dom-${d.id}`}>
+                <div class="dom-head">
+                  <span class="dom-icon" aria-hidden="true">
+                    {d.icon}
+                  </span>
+                  <h3>{d[LANG].label}</h3>
+                </div>
+                <p class="dom-blurb">{d[LANG].blurb}</p>
+                {d.deps.length > 0 && (
+                  <p class="dom-deps">
+                    <span class="deps-label">前提</span>
+                    {d.deps.map((dep) => (
+                      <a class="dep-chip" href={`#dom-${dep}`}>
+                        {domainById.get(dep)?.icon} {domainById.get(dep)?.[LANG].label}
+                      </a>
+                    ))}
+                  </p>
+                )}
+                <ol class="dom-list">
+                  {d.slugs.map((slug) => (
+                    <li>
+                      <a href={localizeHref(LANG, `/posts/${slug}/`)}>{titleOf.get(slug) ?? slug}</a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+          </div>
+          {tier.n < TIERS.length && <div class="tier-arrow" aria-hidden="true">↓</div>}
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

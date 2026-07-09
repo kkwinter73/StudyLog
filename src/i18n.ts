@@ -85,6 +85,7 @@ export const UI = {
 // ナビ項目（ラベルは両言語共通、パスは locale で前置する）
 export const NAV: ReadonlyArray<{ label: string; path: string }> = [
   { label: "Logs", path: "/" },
+  { label: "Map", path: "/map/" },
   { label: "Tags", path: "/tags/" },
   { label: "About", path: "/about/" },
 ];
