@@ -91,6 +91,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "acid-properties",
       "cap-theorem",
       "caching-cache-aside",
+      "soft-delete",
       "db-schema-migration-expand-contract",
     ],
   },
