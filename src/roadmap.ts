@@ -71,6 +71,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "cookie-session-token",
       "cors-explained",
       "websocket-and-sse",
+      "push-notifications",
       "grpc-vs-rest",
       "web-server-proxy-lb-cdn",
       "connection-troubleshooting",
