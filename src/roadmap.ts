@@ -230,6 +230,15 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     ],
   },
   {
+    id: "analytics",
+    tier: 4,
+    icon: "📊",
+    ja: { label: "データ分析 / プロダクト分析", blurb: "ユーザーの行動をイベントで測り、どこで抜けるかを見つける。" },
+    en: { label: "Data / Product Analytics", blurb: "Measuring user behavior via events and finding where they drop off." },
+    deps: ["database"],
+    slugs: ["funnel-and-dropoff-analysis"],
+  },
+  {
     id: "security",
     tier: 4,
     icon: "🛡️",
