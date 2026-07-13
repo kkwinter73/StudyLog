@@ -239,7 +239,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     ja: { label: "データ分析 / プロダクト分析", blurb: "ユーザーの行動をイベントで測り、どこで抜けるかを見つける。" },
     en: { label: "Data / Product Analytics", blurb: "Measuring user behavior via events and finding where they drop off." },
     deps: ["database"],
-    slugs: ["funnel-and-dropoff-analysis"],
+    slugs: ["funnel-and-dropoff-analysis", "data-foundation-for-ai"],
   },
   {
     id: "security",
