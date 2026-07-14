@@ -266,6 +266,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "credential-stuffing",
       "brute-force-password-spray",
       "privilege-escalation-idor",
+      "authentication-bypass",
       "phishing",
       "social-engineering",
       "dns-spoofing",
