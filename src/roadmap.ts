@@ -209,6 +209,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "migration-strategy-selection",
       "system-migration-strategy",
       "data-migration",
+      "migration-testing",
     ],
   },
   {
