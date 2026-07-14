@@ -181,6 +181,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "ecs-iam-roles",
       "secure-access-private-resources",
       "aws-ops-explained",
+      "snapshots-explained",
     ],
   },
   {
