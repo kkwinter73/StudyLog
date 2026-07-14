@@ -256,6 +256,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "auth-boundary-edge-vs-app",
       "secrets-management",
       "ssh-and-key-auth",
+      "sanitization",
       "sql-injection",
       "xss-cross-site-scripting",
       "csrf-attack",
