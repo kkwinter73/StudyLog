@@ -113,6 +113,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "four-layer-architecture",
       "resource-oriented-design",
       "internal-service-grpc",
+      "bff-backend-for-frontend",
     ],
   },
   {
