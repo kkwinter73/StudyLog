@@ -207,6 +207,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "deploy-rollback-strategy",
       "migration-strategy-selection",
       "system-migration-strategy",
+      "data-migration",
     ],
   },
   {
@@ -273,6 +274,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "supply-chain-attack",
       "zero-day",
       "ransomware",
+      "penetration-testing",
     ],
   },
 ];
