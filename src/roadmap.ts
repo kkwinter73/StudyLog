@@ -259,6 +259,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     slugs: [
       "auth-boundary-edge-vs-app",
       "secrets-management",
+      "sandboxing",
       "ssh-and-key-auth",
       "sanitization",
       "sql-injection",
