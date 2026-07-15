@@ -45,6 +45,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "linux-basic-commands",
       "linux-filesystem-and-permissions",
       "linux-process-and-services",
+      "cron-scheduled-jobs",
       "stdin-stdout-stderr",
       "shell-env-and-scripting",
       "linux-distros-and-packages",
