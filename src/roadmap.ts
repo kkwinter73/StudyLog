@@ -125,7 +125,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     ja: { label: "テスト / QA", blurb: "品質を後付けせず作り込む。ピラミッドで戦略を決める。" },
     en: { label: "Testing / QA", blurb: "Building quality in, not bolting it on — strategy via the pyramid." },
     deps: ["go", "architecture"],
-    slugs: ["go-testing-basics", "testing-strategy-pyramid", "qa-quality-built-in", "smoke-testing", "metamorphic-testing"],
+    slugs: ["go-testing-basics", "testing-strategy-pyramid", "qa-quality-built-in", "smoke-testing", "metamorphic-testing", "playwright-e2e"],
   },
   {
     id: "payment",
@@ -196,7 +196,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     ja: { label: "IaC / Terraform", blurb: "インフラをコードで宣言し、再現可能にする。" },
     en: { label: "IaC / Terraform", blurb: "Declaring infrastructure as code to make it reproducible." },
     deps: ["aws"],
-    slugs: ["iac-terraform-basics", "terraform-in-practice", "iac-state-operations", "multi-env-iac"],
+    slugs: ["iac-terraform-basics", "terraform-in-practice", "iac-state-operations", "multi-env-iac", "opentofu-and-terragrunt"],
   },
   {
     id: "cicd",
