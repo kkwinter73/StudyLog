@@ -60,6 +60,10 @@ Since you expose the new to production traffic, mind **side effects and load**.
 - **Mind performance**: the load of running both old and new. You can compare a **sample** rather than everything
 - **Measure progress by match rate**: each diff you kill raises the match rate. Only **once it's high enough** point reads at the new (connects to [cutover method](/posts/system-migration-strategy/))
 
+> ⭐ Diffing (shadow especially) is a verification placed **before cutover**. Even if the cutover method is big-bang (one-shot switch), you can
+> put a shadow period in front of it, build confidence via the match rate, and then switch — **the two are compatible**. Conversely, **after cutover the old
+> (the comparison baseline) is retired**, so shadow generally can't be done. Post-cutover, the old only remains as [rollback](/posts/deploy-rollback-strategy/) insurance.
+
 > 🧭 Running both old (control) and new (candidate), **returning the old's result to the user while recording the diff**, is
 > known as GitHub's "Scientist" pattern — .NET has `Scientist.NET` too. The idea is to embed diffing in the code.
 
