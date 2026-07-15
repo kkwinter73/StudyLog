@@ -92,8 +92,8 @@ Playwright's tools for writing and fixing tests are strong.
 But E2E is **slow, flaky, and heavy to diagnose**. In test strategy it's the **top of the pyramid** —
 keep the count small and guard only "the user experiences that truly matter (the critical paths)".
 
-> 🧭 Do unit and integration thickly with Go's `go test` (→ [/posts/go-testing-basics/](/posts/go-testing-basics/)),
-> and E2E thinly with Playwright. For the division of roles see [/posts/testing-strategy-pyramid/](/posts/testing-strategy-pyramid/).
+> 🧭 Do unit and integration thickly with Go's `go test` (→ [Go Testing Basics](/posts/go-testing-basics/)),
+> and E2E thinly with Playwright. For the division of roles see [Test Strategy and the Pyramid](/posts/testing-strategy-pyramid/).
 
 ## Summary
 
@@ -103,7 +103,4 @@ keep the count small and guard only "the user experiences that truly matter (the
 - Write locators from the **user's viewpoint** (`getByRole` etc.). Assertions **auto-retry** too (pass the locator as-is).
 - codegen / Trace Viewer make writing and fixing fast. But E2E is the **top of the pyramid** — keep it small, guard only critical paths.
 
-### Next steps
-
-- Write one Playwright test for the "if this breaks it's fatal" flow in your own app.
-- Combine with [/posts/smoke-testing/](/posts/smoke-testing/) and run one or two E2E tests as a post-deploy sanity check.
+**Related:** [Test Strategy and the Pyramid](/posts/testing-strategy-pyramid/) / [Go Testing Basics](/posts/go-testing-basics/) / [Smoke Testing](/posts/smoke-testing/) / [Metamorphic Testing](/posts/metamorphic-testing/)

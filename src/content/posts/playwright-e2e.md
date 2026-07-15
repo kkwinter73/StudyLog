@@ -90,8 +90,8 @@ Playwright はテストを書く・直す道具が強い。
 ただし E2E は**遅く・壊れやすく・原因の切り分けが重い**。テスト戦略では**ピラミッドの頂点**で、
 数を絞って「本当に重要なユーザー体験（=クリティカルパス）」だけを守るのが定石だ。
 
-> 🧭 単体・結合は Go の `go test`（→ [/posts/go-testing-basics/](/posts/go-testing-basics/)）で厚く、
-> E2E は Playwright で薄く。役割分担は [/posts/testing-strategy-pyramid/](/posts/testing-strategy-pyramid/) を参照。
+> 🧭 単体・結合は Go の `go test`（→ [Goのテスト入門](/posts/go-testing-basics/)）で厚く、
+> E2E は Playwright で薄く。役割分担は[テスト戦略とピラミッド](/posts/testing-strategy-pyramid/)を参照。
 
 ## まとめ
 
@@ -101,7 +101,4 @@ Playwright はテストを書く・直す道具が強い。
 - ロケータは `getByRole` など**ユーザー視点**で。アサーションも**自動リトライ**（ロケータのまま渡す）。
 - codegen / Trace Viewer で書く・直すが速い。ただし E2E は**ピラミッドの頂点**——数を絞ってクリティカルパスだけ守る。
 
-### 次にやること
-
-- 自分のアプリの「これが壊れたら致命的」なフロー1本を Playwright で書いてみる。
-- [/posts/smoke-testing/](/posts/smoke-testing/) と組み合わせ、デプロイ後の疎通確認に E2E を1〜2本回す。
+**関連:** [テスト戦略とピラミッド](/posts/testing-strategy-pyramid/) / [Goのテスト入門](/posts/go-testing-basics/) / [スモークテスト](/posts/smoke-testing/) / [メタモルフィックテスト](/posts/metamorphic-testing/)
