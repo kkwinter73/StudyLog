@@ -76,6 +76,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "sms-notifications",
       "email-notifications",
       "grpc-vs-rest",
+      "protobuf",
       "web-server-proxy-lb-cdn",
       "connection-troubleshooting",
     ],
