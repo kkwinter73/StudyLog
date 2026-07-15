@@ -173,6 +173,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "iaas-paas-saas-caas",
       "aws-basics-for-go",
       "aws-compute-explained",
+      "aws-ecr-container-registry",
       "aws-networking-explained",
       "aws-igw-and-subnet-mask",
       "aws-security-groups",
