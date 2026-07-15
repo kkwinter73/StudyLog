@@ -124,7 +124,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     ja: { label: "テスト / QA", blurb: "品質を後付けせず作り込む。ピラミッドで戦略を決める。" },
     en: { label: "Testing / QA", blurb: "Building quality in, not bolting it on — strategy via the pyramid." },
     deps: ["go", "architecture"],
-    slugs: ["go-testing-basics", "testing-strategy-pyramid", "qa-quality-built-in", "smoke-testing"],
+    slugs: ["go-testing-basics", "testing-strategy-pyramid", "qa-quality-built-in", "smoke-testing", "metamorphic-testing"],
   },
   {
     id: "payment",
