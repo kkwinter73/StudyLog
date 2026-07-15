@@ -155,6 +155,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     slugs: [
       "container-namespace-cgroup",
       "docker-big-picture",
+      "docker-benefits",
       "dockerfile-basics",
       "image-layers-multistage",
       "container-network-and-data",
