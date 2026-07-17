@@ -9,6 +9,7 @@ export const TIERS: ReadonlyArray<{ n: number; ja: string; en: string }> = [
   { n: 2, ja: "作る — アプリを組み立てる", en: "Build — assembling an app" },
   { n: 3, ja: "載せる — 本番で動かす", en: "Ship — running in production" },
   { n: 4, ja: "守る・回す — 運用と防御", en: "Operate & defend" },
+  { n: 5, ja: "見渡す — 事業とマーケの視点", en: "Zoom out — business & marketing view" },
 ];
 
 export interface Domain {
@@ -250,6 +251,15 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     en: { label: "Data / Product Analytics", blurb: "Measuring user behavior via events and finding where they drop off." },
     deps: ["database"],
     slugs: ["funnel-and-dropoff-analysis", "data-foundation-for-ai", "ai-chatbot-rag-and-bi"],
+  },
+  {
+    id: "business",
+    tier: 5,
+    icon: "💼",
+    ja: { label: "事業・マーケの視点", blurb: "技術から一歩引いて、稼ぎ方・組織文化・見込み客の育て方を経営視点で捉える。" },
+    en: { label: "Business & Marketing view", blurb: "Stepping back from tech to see how you make money, org culture, and growing prospects with an executive lens." },
+    deps: ["analytics"],
+    slugs: ["business-model-for-engineers", "culture-model-for-engineers", "lead-nurturing"],
   },
   {
     id: "security",
