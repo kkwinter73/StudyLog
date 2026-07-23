@@ -209,6 +209,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
     slugs: [
       "deploying-go-apps",
       "cicd-github-actions",
+      "asset-pipeline",
       "ci-oidc-keyless-auth",
       "deploy-rollback-strategy",
       "migration-strategy-selection",
