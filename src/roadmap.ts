@@ -238,6 +238,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "cloudwatch-metrics",
       "cloudwatch-logs",
       "logging-with-slog",
+      "slog-logger-dependency",
       "cloudwatch-dashboards",
       "cloudwatch-alarms-and-alerting",
       "distributed-tracing-otel",
