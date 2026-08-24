@@ -114,6 +114,7 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "clean-architecture-concepts",
       "clean-architecture-in-go",
       "four-layer-architecture",
+      "value-object",
       "resource-oriented-design",
       "internal-service-grpc",
       "bff-backend-for-frontend",
