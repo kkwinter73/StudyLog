@@ -1,7 +1,7 @@
 ---
 title: "ID Mapping in a Migration — Keep the Old ID, or Keep a Mapping Table"
 date: 2026-10-16T11:00:00
-summary: "The first mapping decision in a migration isn't column correspondence, it's what happens to IDs. When to reuse old IDs as-is versus re-issue them and keep a mapping table, where to put that table and how to read it, what breaks when the mapping stops being one-to-one, and how enum mapping differs — in Go."
+summary: "The first thing a data migration decides isn't column correspondence — it's what happens to IDs. When to reuse old IDs versus mint new ones and keep a mapping table, where to put that table and how to read it, what breaks the moment two rows become one, and how enum conversion differs."
 tags: ["データベース", "設計", "Go"]
 level: intermediate
 lang: en
@@ -9,58 +9,81 @@ translationKey: id-mapping-in-migration
 ---
 
 [Inside a Migration Tool](/en/posts/migration-tool-internals/) covered the skeleton that reads and
-loads per domain. This post is about the part that goes wrong most often — **how old IDs become
-new IDs**.
+loads per domain. This post is about **the part that goes wrong most often** — turning old IDs into
+new ones.
 
-## Decide the IDs before the columns
+## Why IDs get special treatment
 
-That old `name` maps to new `full_name` is fixable later. IDs are not. **Changing an ID changes the
-transformation rule for every table that references it.**
+That old `name` maps to new `full_name` is fixable later if you get it wrong. **An ID is not**,
+because other tables point at it.
+
+```text
+Old DB                             New DB
+┌────────────────┐                ┌────────────────┐
+│ app_user       │                │ users          │
+│  uuid = U-001  │ ←──┐           │  id = ???      │ ←──┐
+└────────────────┘    │ refs       └────────────────┘    │ refs
+┌────────────────┐    │           ┌────────────────┐    │
+│ app_order      │    │           │ orders         │    │
+│  user_uuid ────┼────┘           │  user_id ──────┼────┘
+└────────────────┘                └────────────────┘
+```
+
+Change `users.id` and you change what goes into `orders.user_id`. With ten referencing tables, ten
+transformation rules change. **How you decide IDs is the premise every other conversion rests on.**
 
 There are only two options.
 
-| Approach | What it is | When it fits |
+| Approach | What it does | When it fits |
 | --- | --- | --- |
-| **Keep the value** | Load the old primary key as the new primary key | Old is UUID, new is UUID, granularity unchanged |
-| **Re-issue** | Mint a new ID in the new system (UUID v7, etc.) | Old is a sequence or composite key, or two old rows become one new row |
+| **Keep the value** | Load the old primary key as the new primary key | Old and new are both UUID; one row stays one row |
+| **Re-issue** | Mint a new ID in the new system (UUID v7, etc.) | Old is a sequence or composite key / two old rows become one |
 
 **Default to keeping the value.** No mapping table is needed, so child tables just write the old
-foreign-key value through. And when a strange row turns up in production later, you can look up the
-same ID in the old database.
+foreign-key value straight through. And when a strange row shows up in production later, **you can
+look up the same ID in the old database** — that matters enormously when investigating.
 
-Re-issue only where keeping the value is impossible. The classic case is **granularity changing** —
-if two old rows collapse into one new row, keeping either old ID is a lie.
+Re-issue only where keeping the value is physically impossible. The classic case is **granularity
+changing**: if two old rows collapse into one new row, keeping either old ID is a lie.
 
-> ⭐ This does not have to be uniform. **It is decided per table.** Normally one or two tables get new
-> IDs and everything else keeps its value.
+> ⭐ This does not have to be uniform. **It's decided per table.** Typically one or two of fifty
+> tables get new IDs and everything else keeps its value.
 
-## If you re-issue, where does the mapping live
+## If you re-issue, where does the mapping live?
 
-For a re-issued table, child tables must translate the old foreign key into the new ID. Put that
-mapping in **a table in the target database**, not in process memory.
+For a re-issued table, **child tables must translate the old foreign key into the new ID**.
+
+```text
+① loading the parent           ② loading the children
+   read old S-001                 the entry's shift_uuid = S-001
+   → mint new ID 019…e7           → look it up → 019…e7
+   → record it in the mapping     → write 019…e7 into shift_id
+```
+
+Put that mapping in **a table inside the new database**, not in program memory.
 
 ```sql
 CREATE TABLE _idmap_shifts (
-    old_id     TEXT NOT NULL PRIMARY KEY,
-    new_id     UUID NOT NULL,
+    old_id     TEXT NOT NULL PRIMARY KEY, -- the old ID (TEXT, since it isn't always a UUID)
+    new_id     UUID NOT NULL,             -- the newly minted ID
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ```
 
-Three reasons for the database.
+Three reasons for the database:
 
-- **It crosses domains**: the parent and the children load in different transactions. In memory you
-  would need coupling just to hand it over
-- **It survives re-runs**: redo only the children without reloading the parent
-- **Verification can use it**: afterwards you can match "distinct destinations in the mapping" against
-  "rows in the new table" in SQL
+- **It crosses domains** — the parent and the children load in different transactions. Passing it in
+  memory creates coupling that exists only for the hand-off
+- **It survives re-runs** — "reload only the children" works without reloading the parent
+- **Verification can use it** — afterwards you can match "distinct destinations in the mapping"
+  against "rows in the new table" in SQL
 
 Write it **in the same transaction as the parent load**. Split them and you can end up with the
 parent loaded and the mapping empty.
 
 ```go
 // Inside the parent domain's Run: mint and record in the same tx.
-newID, err := uuid.NewV7()
+newID, err := uuid.NewV7() // time-ordered UUID, friendlier to indexes
 if err != nil {
 	return err
 }
@@ -69,20 +92,20 @@ if err := idmap.Insert(ctx, in.TargetTx, oldID, newID.String()); err != nil {
 }
 ```
 
-> ⚠️ Create the table with **`DROP` then `CREATE`**, not `CREATE TABLE IF NOT EXISTS`. Its contents
-> are replaced wholesale alongside the real table, so there is nothing worth keeping — and with
-> `IF NOT EXISTS` **a stale definition from a previous run survives forever**. Change a constraint and
-> it never reaches environments that already have the table.
+> ⚠️ Create it with **`DROP` then `CREATE`**, not `CREATE TABLE IF NOT EXISTS`. Its contents are
+> replaced wholesale along with the real table, so there's nothing worth keeping — and worse, with
+> `IF NOT EXISTS` **a stale definition from a previous run survives forever**, so a constraint change
+> never reaches any environment that already has the table.
 
-> 💡 Prefix it with `_` so it reads as distinct from business tables. Something you will `DROP TABLE`
-> after cutover is better off saying so in its name.
+> 💡 Prefixing the name with `_` keeps it visibly distinct from business tables. Something you will
+> `DROP TABLE` after cutover is better off saying so in its name.
 
-## Two ways to read it — one at a time, or all at once
+## Two ways to read the mapping
 
-The child side looks up the mapping and substitutes the new ID. The obvious version:
+The child side looks the ID up and substitutes the new one. The obvious version:
 
 ```go
-// One round trip per row.
+// One round trip to the database per row.
 func Lookup(ctx context.Context, tx pgx.Tx, oldID string) (string, error) {
 	const sql = "SELECT new_id::text FROM _idmap_shifts WHERE old_id = $1"
 	var newID string
@@ -91,12 +114,19 @@ func Lookup(ctx context.Context, tx pgx.Tx, oldID string) (string, error) {
 }
 ```
 
-Fine up to tens of thousands of child rows. **Past a few hundred thousand, round trips dominate the
-runtime.** When parents are far fewer than children, read the whole mapping once at start and resolve
-from a map in memory.
+Fine up to tens of thousands of child rows. **Past a few hundred thousand, the round trips dominate
+the runtime.** When parents are far fewer than children, read the whole mapping once at start and
+resolve from an in-memory `map`.
+
+```text
+70,000 parents / 400,000 children
+
+Lookup  → 400,000 round trips
+LoadAll → one round trip loading 70,000 rows into a map → resolved in memory afterwards
+```
 
 ```go
-// Once at start; resolve in memory afterwards.
+// Called once at start; everything after that reads this map.
 func LoadAll(ctx context.Context, q RowsQuerier) (map[string]string, error) {
 	rows, err := q.Query(ctx, "SELECT old_id, new_id::text FROM _idmap_shifts")
 	if err != nil {
@@ -116,33 +146,34 @@ func LoadAll(ctx context.Context, q RowsQuerier) (map[string]string, error) {
 }
 ```
 
-Decide on **parent count** (does it fit in memory) and **child count** (do round trips hurt). With
-70k parents and 400k children, one bulk read of 70k beats 400k round trips by a wide margin.
+Only two inputs to the decision: **parent count** (does it fit in memory) and **child count** (do
+round trips hurt).
 
-> ⚠️ When a lookup misses, **stop there rather than falling back to a default**. A child pointing at a
-> parent that isn't in the mapping means the selection criteria and the parent's load conditions
-> disagree; silently writing `NULL` makes that untraceable after the fact.
+> ⚠️ When a lookup misses — a child points at an ID that isn't in the mapping — **stop right there
+> instead of substituting a default**. It means the migration's filtering criteria and the parent's
+> load conditions disagree, and silently writing `NULL` makes that untraceable once the migration is
+> done.
 
-## The mapping is not necessarily one-to-one
+## When "one-to-one" stops holding
 
-This is the part that bites later. Once **merging** appears — two old rows becoming one new row —
-the mapping becomes many-to-one.
+This is what bites later. **Merging** — two old rows turn out to be the same thing, so the new system
+keeps one — makes the mapping **many-to-one**.
 
-```sql
--- Two old rows point at the same new_id, so new_id cannot be UNIQUE.
-old_id = 'shift-a-2026-01-05' → new_id = '019...e7'
-old_id = 'shift-b-2026-01-05' → new_id = '019...e7'
+```text
+old S-001 ─┐
+           ├──> new 019…e7   (two old rows → one new row)
+old S-002 ─┘
 ```
 
-It shows up in three places.
+It surfaces in three places, each one a spot where "assumed one-to-one" code breaks.
 
-- **Constraints**: drop the `UNIQUE` on `new_id`. Add merging while it is still there and the load fails
-- **Verification**: compare the new table's row count against `COUNT(DISTINCT new_id)`, not
-  `COUNT(*)`. Forget this and the counts stay off by exactly the merged rows, warning forever
-- **Indexes**: even with no lookup path from `new_id`, keep an index on it — verification counts
-  distinct values
+| Place | Written for one-to-one | Once it's many-to-one |
+| --- | --- | --- |
+| Constraint | `UNIQUE` on `new_id` | **drop it** (otherwise the load fails) |
+| Verification | compare `COUNT(*)` with the new table's rows | compare **`COUNT(DISTINCT new_id)`** |
+| Index | not needed, nothing reads by `new_id` | **keep one** — verification counts distinct values |
 
-The merge table itself (which row is the same entity as which) is usually **built by hand**.
+And the table of **which row is the same thing as which** is usually built by hand.
 
 ```yaml
 # Don't derive it mechanically from names. A rule that "almost always works" is the danger.
@@ -151,18 +182,18 @@ pairs:
     main: "22222222-2222-2222-2222-222222222222"
 ```
 
-A rule like "strip the prefix and match the rest" will hit 33 out of 34 and miss one. The miss
-**does not error — it quietly lands on the wrong destination**. So use a table rather than a rule,
-and **have a pre-flight check fail on anything missing from the table**.
+A rule like "strip the prefix and match the rest" will hit 33 out of 34 and miss one — and **the miss
+doesn't error, it quietly lands on the wrong destination**. So use a table, not a rule, and **fail a
+pre-migration check on anything missing from the table**.
 
 > ⭐ Once merging exists, **every path that writes the new ID must go through `Resolve`**. Miss one
-> and that path alone keeps the pre-merge ID, breaking composite foreign keys.
+> and that path alone keeps the pre-merge ID, breaking multi-column foreign keys.
 
 ```go
 // Return the merge target for a merged-away ID; otherwise return the input unchanged.
 func (m *Map) Resolve(id string) string {
 	if m == nil {
-		return id // nil-safe, so callers need no branch
+		return id // works with no table at all (nil-safe), so callers need no branch
 	}
 	if main, ok := m.toMain[normalize(id)]; ok {
 		return main
@@ -173,16 +204,16 @@ func (m *Map) Resolve(id string) string {
 
 ## The other kind of mapping — enum values
 
-Beyond IDs you need an **enum value mapping**. Old side stored by Java's `@Enumerated(STRING)` as
-`PascalCase`, new side a `CHECK` constraint over `UPPER_SNAKE_CASE`, is a common pairing.
+Besides IDs you need an **enum mapping**. Old side storing `PascalCase` strings like
+`WaitingPayment`, new side using `UPPER_SNAKE_CASE` like `WAITING_PAYMENT`, is a common pairing.
 
-What differs from ID mapping is **what happens on an unknown value**.
+What makes it different from ID mapping is **what happens on a value you don't know**.
 
 ```go
 // An unmapped legacy value is an error. Never fall back to a default.
 type MissingError struct {
-	EnumKey  string
-	OldValue string
+	EnumKey  string // which enum this is about ("order_status", etc.)
+	OldValue string // the unknown value found in the old database
 }
 
 func (e *MissingError) Error() string {
@@ -190,29 +221,38 @@ func (e *MissingError) Error() string {
 }
 ```
 
-Fall back to a default and **every value that exists only in production data collapses into one
-category and the run completes**. Nothing errors, so you find out once the business is live.
+Why a default is wrong: **every value that exists only in production data collapses into one category
+and the run completes**. Nothing errors, so you find out after the business is live — and by then you
+can't tell which rows were flattened.
 
-And detect unknown values **before loading starts**. `SELECT DISTINCT` on the old column, matched
-against the map's keys, answers it in seconds. Aborting on an unknown value after streaming five
-million rows loses exactly that much time.
+Also, detect unknown values **before loading starts**. `SELECT DISTINCT` on the old column, matched
+against the map's keys, answers it in seconds.
 
-> 🧭 C#'s `Enum.TryParse` is case-sensitive by default and reports failure as a `bool`. In a migration
-> the point is **not to swallow that `false`** — discard the return value and you write `default(T)`,
-> the first member. Always log the one row that failed to convert, with its identifier.
+```sql
+-- Seconds to learn what's actually in the old database
+SELECT DISTINCT state FROM app_order;
+```
+
+Aborting on an unknown value after streaming five million rows loses exactly that much time. **Don't
+spend hours learning something that takes seconds.**
+
+> 🧭 C#'s `Enum.TryParse` reports failure as a `bool`. In a migration the point is **not to swallow
+> that `false`** — ignore the return value and `default(T)`, the first member, gets written silently.
+> Always log the row that failed to convert, in a form that identifies which row it was.
 
 ## Wrap-up
 
-- **Default to keeping the value** (old ID as new ID). Re-issue only for tables whose granularity
-  changes, which keeps the mapping surface minimal
-- Put the mapping in **a table in the target database** — usable across domains, across re-runs, and
-  during verification
-- Choose the read strategy by **parent and child counts**. Past a few hundred thousand children, stop
-  doing one round trip per row
-- Merging makes the **mapping many-to-one**. Drop the `UNIQUE` and switch verification to
+- **How you decide IDs is the premise for every other conversion.** Settle it before column mapping
+- **Default to keeping the value.** Re-issue only for tables whose granularity changes, so the mapping
+  surface stays minimal
+- Put the mapping in **a table in the new database**, written in the same transaction as the parent.
+  Usable across domains, across re-runs, and during verification
+- Choose the read strategy from **parent and child counts**. Past a few hundred thousand children,
+  stop doing one round trip per row
+- Merging makes the **mapping many-to-one**. Drop the `UNIQUE`, switch verification to
   `COUNT(DISTINCT new_id)`
-- **Unknown enum values stop the run** rather than falling back — and they get caught in a pre-flight
-  check, before anything is loaded
+- **Unknown enum values stop the run** rather than falling back — and they get caught before any
+  loading starts
 
 ## Next
 
