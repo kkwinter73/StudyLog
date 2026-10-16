@@ -216,6 +216,8 @@ export const DOMAINS: ReadonlyArray<Domain> = [
       "migration-strategy-selection",
       "system-migration-strategy",
       "data-migration",
+      "migration-tool-internals",
+      "id-mapping-in-migration",
       "migration-testing",
       "preflight-migrate-validate",
       "api-response-diffing",
